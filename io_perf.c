@@ -93,7 +93,7 @@ int main(int argc, char *argv[]){
         adios2_io* io;
         adios2_engine* engine;
         adios2_error status;
-        adios2_variable* dset_id; //TODO: change this to var_id probably for all. ADIOS2 and NetCDF call it variable, only HDF5 calls is dataset.
+        adios2_variable* var_id; //TODO: change this to var_id probably for all. ADIOS2 and NetCDF call it variable, only HDF5 calls is dataset.
         const float timeout_seconds = 10.0;
         adios2_step_status* step_status;
         step_status = malloc(sizeof(adios2_step_status));
@@ -176,7 +176,7 @@ int main(int argc, char *argv[]){
 
     // Define Metadata:
     #if defined ADIOS2
-        dset_id = adios2_define_variable(io, "pressure", ADIOS2_DAT, NDIMS, nxyz_global, offset, nxyz, adios2_constant_dims_true);  if (dset_id == NULL) ABORT(errno);
+        var_id = adios2_define_variable(io, "pressure", ADIOS2_DAT, NDIMS, nxyz_global, offset, nxyz, adios2_constant_dims_true);  if (var_id == NULL) ABORT(errno);
     #endif       
 
     // Create an engine for ADIOS2 - file name and access mode are defined here. (could also be done right after declaring the io - in symmetry with read...)
@@ -195,7 +195,7 @@ int main(int argc, char *argv[]){
         #if defined POSIX
             nb_processed = fwrite(data_out, PRECIS, NX*NY*NZ, file_id);  if (nb_processed!=NX*NY*NZ) ABORT(errno);
         #elif defined ADIOS2
-           status = adios2_put(engine, dset_id, data_out, adios2_mode_deferred);  ERR(); 
+           status = adios2_put(engine, var_id, data_out, adios2_mode_deferred);  ERR(); 
            status = adios2_end_step(engine); ERR();
         #endif
 
@@ -261,8 +261,8 @@ int main(int argc, char *argv[]){
     #endif 
 
     #if defined ADIOS2
-        dset_id = adios2_inquire_variable(io, "pressure");  if (dset_id == NULL) ABORT(errno);
-        adios2_set_selection(dset_id, NDIMS, offset, nxyz);  // NOTE: adios2_variable_ndims, adios2_variable_start and adios2_variable_count let inquire these values from the file (adios2_variable_shape lets inquire nxyz_global)
+        var_id = adios2_inquire_variable(io, "pressure");  if (var_id == NULL) ABORT(errno);
+        adios2_set_selection(var_id, NDIMS, offset, nxyz);  // NOTE: adios2_variable_ndims, adios2_variable_start and adios2_variable_count let inquire these values from the file (adios2_variable_shape lets inquire nxyz_global)
     #endif   
 
     time_s=0.0;  nit=0;
@@ -276,7 +276,7 @@ int main(int argc, char *argv[]){
         #if defined POSIX
             nb_processed = fread(data_in, PRECIS, NX*NY*NZ, file_id);  if (nb_processed!=NX*NY*NZ) ABORT(errno);
         #elif defined ADIOS2
-           status = adios2_get(engine, dset_id, data_in, adios2_mode_deferred);  ERR(); 
+           status = adios2_get(engine, var_id, data_in, adios2_mode_deferred);  ERR(); 
            status = adios2_end_step(engine); ERR();
         #endif
 

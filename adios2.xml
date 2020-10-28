@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<adios-config>
+
+    <io name="BPFile_Write">
+        <engine type="BP4">
+            <!-- BP4/SST engine parameters -->
+            <parameter key="OpenTimeoutSecs" value="10.0"/>
+            <parameter key="SubStreams" value="128"/>
+            <!-- parameter key="FlushStepsCount" value="2"/ -->
+            <!-- parameter key="InitialBufferSize" value="10737418240"/ -->
+            <!-- parameter key="Threads" value="10"/ -->
+            <parameter key="StatsLevel" value="0"/>
+            <!-- parameter key="BurstBufferPath" value="/tmp"/ -->
+            <!-- parameter key="BurstBufferVerbose" value="1"/ -->
+        </engine>
+    </io>
+    <io name="H5File_Write">
+        <engine type="HDF5">
+            <!-- BP4/SST engine parameters -->
+            <parameter key="OpenTimeoutSecs" value="10.0"/>
+        </engine>
+    </io>
+
+    <io name="BPFile_Read">
+        <engine type="BP4">
+            <!-- BP4/SST engine parameters -->
+            <parameter key="OpenTimeoutSecs" value="10.0"/>
+            <parameter key="SubStreams" value="128"/>
+        </engine>
+    </io>
+    <io name="H5File_Read">
+        <engine type="HDF5">
+            <!-- BP4/SST engine parameters -->
+            <parameter key="OpenTimeoutSecs" value="10.0"/>
+        </engine>
+    </io>
+
+</adios-config>
+
